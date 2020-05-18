@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'utilities/numberTextInputFormatter.dart';
+import 'utilities/number_form_field.dart';
 import 'models/data.dart';
-import 'utilities/conversions.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,7 +23,7 @@ class MyApp extends StatelessWidget {
 
 class AorticValveAreaByVmax extends StatefulWidget {
   AorticValveAreaByVmax({Key key}) : super(key: key);
-  
+
   @override
   _AorticValveAreaByVmax createState() => _AorticValveAreaByVmax();
 }
@@ -53,103 +51,70 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
       ),
       body: Container(
         padding: EdgeInsets.all(8),
-        child: Form(
-          key: _avAreaFormKey,
-          autovalidate: true,
-          child: ListView(
-            padding: EdgeInsets.all(8), 
-            children: <Widget>[
-            TextFormField(
-              initialValue: data.lvotDiameter.toString(),
-              inputFormatters: [
-                NumberTextInputFormatter()
-              ],
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                labelText: 'LVOT Διάμετρος',
-                hintText: 'Διάμετρος του χώρου Εξόδου της Αριστεράς Κοιλίας',
+        child: ListView(padding: EdgeInsets.all(8), children: <Widget>[
+          Form(
+            key: _avAreaFormKey,
+            autovalidate: true,
+            child: Column(children: [
+              NumberFormField(
+                initialValue: data.lvotDiameter,
+                decoration: const InputDecoration(
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  labelText: 'LVOT Διάμετρος',
+                  hintText: 'Διάμετρος του χώρου Εξόδου της Αριστεράς Κοιλίας',
+                ),
+                onChanged: (val) => setState(() {
+                  data.lvotDiameter = val;
+                }),
               ),
-              validator: (value) {
-                double v = value.parseDouble();
-                if (v.isNaN) {
-                  return 'Παρακαλώ δώστε μια πραγματική τιμή.';
-                } else {
-                  return null;
-                }
-              },
-              onChanged: (val) => setState(() {
-                data.lvotDiameter = val.parseDouble();
-              }),
-            ),
-            TextFormField(
-              initialValue: data.lvotVmax.toString(),
-              inputFormatters: [
-                NumberTextInputFormatter(),
-              ],
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                labelText: 'LVOT Vmax',
-                hintText:
-                    'Μέγιστη ταχύτητα ροής στο χώρο Εξόδου της Αριστεράς Κοιλίας',
+              NumberFormField(
+                initialValue: data.lvotVmax,
+                decoration: const InputDecoration(
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  labelText: 'LVOT Vmax',
+                  hintText:
+                      'Μέγιστη ταχύτητα ροής στο χώρο Εξόδου της Αριστεράς Κοιλίας',
+                ),
+                onChanged: (val) => setState(() {
+                  data.lvotVmax = val;
+                }),
               ),
-              validator: (value) {
-                double v = value.parseDouble();
-                if (v.isNaN) {
-                  return 'Παρακαλώ δώστε μια πραγματική τιμή.';
-                } else {
-                  return null;
-                }
-              },
-              onChanged: (val) => setState(() {
-                data.lvotVmax = val.parseDouble();
-              }),
-            ),
-            TextFormField(
-              initialValue: data.avVmax.toString(),
-              inputFormatters: [
-                NumberTextInputFormatter(),
-              ],
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                labelText: 'Aortic Valve Vmax',
-                hintText:
-                    'Μέγιστη ταχύτητα ροής διαμέσου της αορτικής βαλβίδας',
+              NumberFormField(
+                initialValue: data.avVmax,
+                decoration: const InputDecoration(
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  labelText: 'Aortic Valve Vmax',
+                  hintText:
+                      'Μέγιστη ταχύτητα ροής διαμέσου της αορτικής βαλβίδας',
+                ),
+                onChanged: (val) => setState(() {
+                  data.avVmax = val;
+                }),
               ),
-              validator: (value) {
-                double v = value.parseDouble();
-                if (v.isNaN) {
-                  return 'Παρακαλώ δώστε μια πραγματική τιμή.';
-                } else {
-                  return null;
-                }
-              },
-              onChanged: (val) => setState(() {
-                data.avVmax = val.parseDouble();
-              }),
-            ),
-            AnimatedOpacity(
-              opacity: data.avArea.isNaN ? 0.0 : 1.0,
-              duration: Duration(seconds: 1),
+            ]),
+          ),
+          AnimatedOpacity(
+            opacity: data.avArea.isNaN ? 0.0 : 1.0,
+            duration: Duration(seconds: 1),
+            child: Card(
               child: Container(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    Text(
-                      'Δυναμική επιφάνεια διάνοιξης της Αορτικής Βαλβίδας:',
-                    ),
-                    Text(
-                      data.avArea.isNaN?'Λάθος':'${data.avArea.toStringAsFixed(2)} cm\u00B2',
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ],
-                )
-              ),
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Δυναμική επιφάνεια διάνοιξης της Αορτικής Βαλβίδας:',
+                      ),
+                      Text(
+                        data.avArea.isNaN
+                            ? 'Λάθος'
+                            : '${data.avArea.toStringAsFixed(2)} cm\u00B2',
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ],
+                  )),
             ),
-          ]),
-        ),
+          )
+        ]),
       ),
     );
   }

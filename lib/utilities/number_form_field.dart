@@ -106,9 +106,9 @@ class NumberFormField extends FormField<String> {
               field.didChange(value);
             }
 
-            inputFormatters = (inputFormatters == null)
-                ? [NumberInputFormatter()]
-                : [NumberInputFormatter()] + inputFormatters;
+            (inputFormatters == null)
+                ? List<TextInputFormatter>().add(NumberInputFormatter())
+                : inputFormatters.add(NumberInputFormatter());
             return TextField(
               controller: state._effectiveController,
               focusNode: focusNode,

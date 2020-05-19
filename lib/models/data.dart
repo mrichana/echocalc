@@ -1,9 +1,9 @@
 import 'Dart:math';
 
 class Data {
-  static const double _initLvotDiam = 2.0;
-  static const double _initLvotVmax = 1.0;
-  static const double _initAvVmax = 4.0;
+  static const double _initLvotDiam = null;
+  static const double _initLvotVmax = null;
+  static const double _initAvVmax = null;
 
   double lvotDiameter = _initLvotDiam;
   double lvotVmax = _initLvotVmax;

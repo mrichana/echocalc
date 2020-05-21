@@ -31,20 +31,11 @@ class AorticValveAreaByVmax extends StatefulWidget {
 class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
   Data data = Data();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   final _avAreaFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    var activeRange = AvArea.valueColorList.getValue(data.avArea.value);
     var rowView = Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -57,19 +48,20 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
                   autovalidate: true,
                   child: Column(children: [
                     NumberFormField(
-                      initialValue: data.lvotDiameter,
+                      initialValue: data.avArea.lvotDiameter,
+                      onTapSelectAll: true,
                       decoration: const InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         labelText: 'LVOT Diameter (cm)',
-                        hintText:
-                            'Left ventricle outflow tract diameter',
+                        hintText: 'Left ventricle outflow tract diameter',
                       ),
                       onChanged: (val) => setState(() {
-                        data.lvotDiameter = val;
+                        data.avArea.lvotDiameter = val;
                       }),
                     ),
                     NumberFormField(
-                      initialValue: data.lvotVmax,
+                      initialValue: data.avArea.lvotVmax,
+                      onTapSelectAll: true,
                       decoration: const InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         labelText: 'LVOT Vmax (m/s)',
@@ -77,11 +69,12 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
                             'Maximum flow velocity through the left ventricle ouflow tract',
                       ),
                       onChanged: (val) => setState(() {
-                        data.lvotVmax = val;
+                        data.avArea.lvotVmax = val;
                       }),
                     ),
                     NumberFormField(
-                      initialValue: data.avVmax,
+                      initialValue: data.avArea.avVmax,
+                      onTapSelectAll: true,
                       decoration: const InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         labelText: 'Aortic Valve Vmax (m/s)',
@@ -89,7 +82,7 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
                             'Maximum flow velocity through the aortic valve',
                       ),
                       onChanged: (val) => setState(() {
-                        data.avVmax = val;
+                        data.avArea.avVmax = val;
                       }),
                     ),
                   ]),
@@ -102,24 +95,37 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               AnimatedOpacity(
-                opacity: data.avArea.isNaN ? 0.0 : 1.0,
+                opacity:
+                    (activeRange.visible)
+                        ? 1.0
+                        : 0.0,
                 duration: Duration(seconds: 1),
-                child: Card(
-                  child: Container(
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Δυναμική επιφάνεια διάνοιξης της Αορτικής Βαλβίδας:',
-                          ),
-                          Text(
-                            data.avArea.isNaN
-                                ? 'Λάθος'
-                                : '${data.avArea.toStringAsFixed(2)} cm\u00B2',
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                        ],
-                      )),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: AnimatedContainer(
+                        duration: Duration(seconds: 1),
+                        color: activeRange.color,
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Dynamic apetrure area of the Aortic Valve:',
+                            ),
+                            Text(
+                              (data.avArea.value.isNaN ||
+                                      data.avArea.value.isInfinite ||
+                                      data.avArea.value.isNegative)
+                                  ? 'Error'
+                                  : '${data.avArea.value.toStringAsFixed(2)} cm\u00B2',
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                            Text(
+                                activeRange.value,
+                                style: Theme.of(context).textTheme.headline6),
+                          ],
+                        )),
+                  ),
                 ),
               )
             ],
@@ -133,60 +139,75 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
         autovalidate: true,
         child: Column(children: [
           NumberFormField(
-            initialValue: data.lvotDiameter,
+            initialValue: data.avArea.lvotDiameter,
+            onTapSelectAll: true,
             decoration: const InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.auto,
-              labelText: 'LVOT Διάμετρος (cm)',
-              hintText: 'Διάμετρος του χώρου Εξόδου της Αριστεράς Κοιλίας',
+              labelText: 'LVOT Diameter (cm)',
+              hintText: 'Left ventricle outflow tract diameter',
             ),
             onChanged: (val) => setState(() {
-              data.lvotDiameter = val;
+              data.avArea.lvotDiameter = val;
             }),
           ),
           NumberFormField(
-            initialValue: data.lvotVmax,
+            initialValue: data.avArea.lvotVmax,
+            onTapSelectAll: true,
             decoration: const InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               labelText: 'LVOT Vmax (m/s)',
               hintText:
-                  'Μέγιστη ταχύτητα ροής στο χώρο Εξόδου της Αριστεράς Κοιλίας',
+                  'Maximum flow velocity through the left ventricle ouflow tract',
             ),
             onChanged: (val) => setState(() {
-              data.lvotVmax = val;
+              data.avArea.lvotVmax = val;
             }),
           ),
           NumberFormField(
-            initialValue: data.avVmax,
+            initialValue: data.avArea.avVmax,
+            onTapSelectAll: true,
             decoration: const InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               labelText: 'Aortic Valve Vmax (m/s)',
-              hintText: 'Μέγιστη ταχύτητα ροής διαμέσου της αορτικής βαλβίδας',
+              hintText: 'Maximum flow velocity through the aortic valve',
             ),
             onChanged: (val) => setState(() {
-              data.avVmax = val;
+              data.avArea.avVmax = val;
             }),
           ),
         ]),
       ),
       AnimatedOpacity(
-        opacity: data.avArea.isNaN ? 0.0 : 1.0,
+        opacity: activeRange.visible
+            ? 1.0
+            : 0.0,
         duration: Duration(seconds: 1),
-        child: Card(
-          child: Container(
-              padding: EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Text(
-                    'Δυναμική επιφάνεια διάνοιξης της Αορτικής Βαλβίδας:',
-                  ),
-                  Text(
-                    data.avArea.isNaN
-                        ? 'Λάθος'
-                        : '${data.avArea.toStringAsFixed(2)} cm\u00B2',
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                ],
-              )),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            child: AnimatedContainer(
+                duration: Duration(seconds: 1),
+                color: activeRange.color,
+                padding: EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Text(
+                      'Dynamic apetrure area of the Aortic Valve:',
+                    ),
+                    Text(
+                      (data.avArea.value.isNaN ||
+                              data.avArea.value.isInfinite ||
+                              data.avArea.value.isNegative)
+                          ? 'Error'
+                          : '${data.avArea.value.toStringAsFixed(2)} cm\u00B2',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    Text(
+                        activeRange.value,
+                        style: Theme.of(context).textTheme.headline6),
+                  ],
+                )),
+          ),
         ),
       )
     ]);
@@ -197,7 +218,9 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
       body: Container(
           padding: EdgeInsets.all(8),
           child: OrientationBuilder(builder: (context, orientation) {
-            return (MediaQuery.of(context).orientation == Orientation.portrait) ? listView : rowView;
+            return (MediaQuery.of(context).orientation == Orientation.portrait)
+                ? listView
+                : rowView;
           })),
     );
   }

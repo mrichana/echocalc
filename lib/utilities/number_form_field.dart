@@ -40,6 +40,7 @@ class NumberFormField extends FormField<String> {
     bool expands = false,
     int maxLength,
     ValueChanged<double> onChanged,
+    bool onTapSelectAll,
     GestureTapCallback onTap,
     VoidCallback onEditingComplete,
     ValueChanged<double> onFieldSubmitted,
@@ -75,11 +76,11 @@ class NumberFormField extends FormField<String> {
         ),
         assert(maxLength == null || maxLength > 0),
         assert(enableInteractiveSelection != null),
+        assert(! (onTapSelectAll == true && onTap != null)),
         super(
           key: key,
-          initialValue: controller != null
-              ? controller.text
-              : (initialValue.toString() ?? (0.0).toString()),
+          initialValue:
+              controller != null ? controller.text : null, //initialValue?.toString(),
           onSaved: (str) {
             onSaved(str.parseDouble());
           },
@@ -87,7 +88,7 @@ class NumberFormField extends FormField<String> {
               (str) {
                 double v = str.parseDouble();
                 if (v.isNaN) {
-                  return 'Παρακαλώ δώστε μια πραγματική τιμή.';
+                  return 'Please type in a value';
                 } else {
                   return null;
                 }
@@ -101,14 +102,16 @@ class NumberFormField extends FormField<String> {
                 .applyDefaults(Theme.of(field.context).inputDecorationTheme);
             void onChangedHandler(String value) {
               if (onChanged != null) {
-                onChanged(value.parseDouble());
+                onChanged(value?.parseDouble());
               }
               field.didChange(value);
             }
 
-            (inputFormatters == null)
-                ? List<TextInputFormatter>().add(NumberInputFormatter())
-                : inputFormatters.add(NumberInputFormatter());
+            void onTapHandler() {
+              state._effectiveController.selection = TextSelection(baseOffset: 0, extentOffset: state._effectiveController.text.length);
+            }
+
+            (inputFormatters ??= List<TextInputFormatter>()).add(NumberInputFormatter());
             return TextField(
               controller: state._effectiveController,
               focusNode: focusNode,
@@ -139,7 +142,7 @@ class NumberFormField extends FormField<String> {
               expands: expands,
               maxLength: maxLength,
               onChanged: onChangedHandler,
-              onTap: onTap,
+              onTap: onTapSelectAll == true ? onTapHandler : onTap,
               onEditingComplete: onEditingComplete,
               onSubmitted: (str) {
                 onFieldSubmitted(str.parseDouble());
@@ -245,10 +248,13 @@ class NumberInputFormatter extends TextInputFormatter {
     TextEditingValue ret = newValue;
 
     if (ret.text.startsWith('.')) {
-      ret = TextEditingValue(text: '0'+ret.text, selection: TextSelection.collapsed(offset: ret.selection.baseOffset + 1));
+      ret = TextEditingValue(
+          text: '0' + ret.text,
+          selection:
+              TextSelection.collapsed(offset: ret.selection.baseOffset + 1));
     }
 
-    if (ret.text.isNotEmpty && ret.text.parseDouble().isNaN) {
+    if (ret.text!='' && !RegExp(r'^\d+\.?\d*$').hasMatch(ret.text)) {
       ret = oldValue;
     }
 

@@ -1,23 +1,22 @@
 import 'package:echocalc/utilities/conversions.dart';
 import 'package:flutter/material.dart';
-import 'number_form_field.dart';
-import '../models/data.dart';
+import 'package:echocalc/widgets/number_form_field.dart';
+import 'package:echocalc/models/data.dart';
 
-class AorticValveAreaByVmax extends StatefulWidget {
-  AorticValveAreaByVmax({Key key}) : super(key: key);
+class AorticValveAreaByVTI extends StatefulWidget {
+  AorticValveAreaByVTI({Key key}) : super(key: key);
 
   @override
-  _AorticValveAreaByVmax createState() => _AorticValveAreaByVmax();
+  _AorticValveAreaByVTI createState() => _AorticValveAreaByVTI();
 }
 
-class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
-  AvAreaVmax avAreaVmax = AvAreaVmax();
-
-  final _avAreaVmaxFormKey = GlobalKey<FormState>();
+class _AorticValveAreaByVTI extends State<AorticValveAreaByVTI> {
+  AvAreaVTI _avAreaVTI = AvAreaVTI();
+  final _avAreaVTIFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    var activeRange = AvAreaVmax.valueColorList.getValue(avAreaVmax.value);
+    var activeRange = AvAreaVTI.valueColorList.getValue(_avAreaVTI.value);
     var result = AnimatedOpacity(
       opacity: activeRange.visible ? 1.0 : 0.0,
       duration: Duration(seconds: 1),
@@ -34,11 +33,11 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
                     'Dynamic apetrure area of the Aortic Valve:',
                   ),
                   Text(
-                    (avAreaVmax.value.isNaN ||
-                            avAreaVmax.value.isInfinite ||
-                            avAreaVmax.value.isNegative)
+                    (_avAreaVTI.value.isNaN ||
+                            _avAreaVTI.value.isInfinite ||
+                            _avAreaVTI.value.isNegative)
                         ? 'Error'
-                        : '${avAreaVmax.value.toStringAsFixed(2)} cm\u00B2',
+                        : '${_avAreaVTI.value.toStringAsFixed(2)} cm\u00B2',
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   Text(activeRange.value,
@@ -49,11 +48,11 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
       ),
     );
     var form = Form(
-      key: _avAreaVmaxFormKey,
+      key: _avAreaVTIFormKey,
       autovalidate: true,
       child: Column(children: [
         NumberFormField(
-          initialValue: avAreaVmax.lvotDiameter,
+          initialValue: _avAreaVTI.lvotDiameter,
           onTapSelectAll: true,
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -61,32 +60,32 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
             hintText: 'Left ventricle outflow tract diameter',
           ),
           onChanged: (val) => setState(() {
-            avAreaVmax.lvotDiameter = val;
+            _avAreaVTI.lvotDiameter = val;
           }),
         ),
         NumberFormField(
-          initialValue: avAreaVmax.lvotVmax,
+          initialValue: _avAreaVTI.lvotVTI,
           onTapSelectAll: true,
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelText: 'LVOT Vmax (m/s)',
+            labelText: 'LVOT VTI (cm)',
             hintText:
-                'Maximum flow velocity through the left ventricle ouflow tract',
+                'Velocity time integral through the left ventricle ouflow tract',
           ),
           onChanged: (val) => setState(() {
-            avAreaVmax.lvotVmax = val;
+            _avAreaVTI.lvotVTI = val;
           }),
         ),
         NumberFormField(
-          initialValue: avAreaVmax.avVmax,
+          initialValue: _avAreaVTI.avVTI,
           onTapSelectAll: true,
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelText: 'Aortic Valve Vmax (m/s)',
-            hintText: 'Maximum flow velocity through the aortic valve',
+            labelText: 'Aortic Valve VTI (cm)',
+            hintText: 'Velocity time integral through the aortic valve',
           ),
           onChanged: (val) => setState(() {
-            avAreaVmax.avVmax = val;
+            _avAreaVTI.avVTI = val;
           }),
         ),
       ]),
@@ -114,10 +113,10 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
   }
 }
 
-class AvAreaVmax {
+class AvAreaVTI {
   static const double _initLvotDiam = null;
-  static const double _initLvotVmax = null;
-  static const double _initAvVmax = null;
+  static const double _initLvotVTI = null;
+  static const double _initAvVTI = null;
 
   static ValueRangeList valueColorList = ValueRangeList([
     const Range(
@@ -149,13 +148,13 @@ class AvAreaVmax {
   ]);
 
   double lvotDiameter = _initLvotDiam;
-  double lvotVmax = _initLvotVmax;
-  double avVmax = _initAvVmax;
+  double lvotVTI = _initLvotVTI;
+  double avVTI = _initAvVTI;
 
   double get value {
     double ret;
     try {
-      ret = (MathUtils.area(lvotDiameter) * lvotVmax) / avVmax ?? double.nan;
+      ret = (MathUtils.area(lvotDiameter) * lvotVTI) / avVTI ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

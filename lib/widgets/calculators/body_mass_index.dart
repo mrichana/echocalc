@@ -1,22 +1,23 @@
-import 'package:echocalc/utilities/conversions.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'number_form_field.dart';
-import '../models/data.dart';
+import 'package:echocalc/widgets/number_form_field.dart';
+import 'package:echocalc/models/data.dart';
 
-class AorticValveAreaByVTI extends StatefulWidget {
-  AorticValveAreaByVTI({Key key}) : super(key: key);
+class BodyMassIndex extends StatefulWidget {
+  BodyMassIndex({Key key}) : super(key: key);
 
   @override
-  _AorticValveAreaByVTI createState() => _AorticValveAreaByVTI();
+  _BodyMassIndex createState() => _BodyMassIndex();
 }
 
-class _AorticValveAreaByVTI extends State<AorticValveAreaByVTI> {
-  AvAreaVTI _avAreaVTI = AvAreaVTI();
-  final _avAreaVTIFormKey = GlobalKey<FormState>();
+class _BodyMassIndex extends State<BodyMassIndex> {
+  BodyMassIndexCalculation bodyMassIndexCalculation = BodyMassIndexCalculation();
+
+  final _bodyMassIndexFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    var activeRange = AvAreaVTI.valueColorList.getValue(_avAreaVTI.value);
+    var activeRange = BodyMassIndexCalculation.valueColorList.getValue(bodyMassIndexCalculation.value);
     var result = AnimatedOpacity(
       opacity: activeRange.visible ? 1.0 : 0.0,
       duration: Duration(seconds: 1),
@@ -30,14 +31,11 @@ class _AorticValveAreaByVTI extends State<AorticValveAreaByVTI> {
               child: Column(
                 children: [
                   Text(
-                    'Dynamic apetrure area of the Aortic Valve:',
-                  ),
-                  Text(
-                    (_avAreaVTI.value.isNaN ||
-                            _avAreaVTI.value.isInfinite ||
-                            _avAreaVTI.value.isNegative)
+                    (bodyMassIndexCalculation.value.isNaN ||
+                            bodyMassIndexCalculation.value.isInfinite ||
+                            bodyMassIndexCalculation.value.isNegative)
                         ? 'Error'
-                        : '${_avAreaVTI.value.toStringAsFixed(2)} cm\u00B2',
+                        : '${bodyMassIndexCalculation.value.toStringAsFixed(2)} kgr/m\u00B2',
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   Text(activeRange.value,
@@ -48,44 +46,32 @@ class _AorticValveAreaByVTI extends State<AorticValveAreaByVTI> {
       ),
     );
     var form = Form(
-      key: _avAreaVTIFormKey,
+      key: _bodyMassIndexFormKey,
       autovalidate: true,
       child: Column(children: [
         NumberFormField(
-          initialValue: _avAreaVTI.lvotDiameter,
+          initialValue: bodyMassIndexCalculation.weight,
           onTapSelectAll: true,
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelText: 'LVOT Diameter (cm)',
-            hintText: 'Left ventricle outflow tract diameter',
+            labelText: 'Weight (kgr)',
+            hintText: 'Dry body weight in kilograms',
           ),
           onChanged: (val) => setState(() {
-            _avAreaVTI.lvotDiameter = val;
+            bodyMassIndexCalculation.weight = val;
           }),
         ),
         NumberFormField(
-          initialValue: _avAreaVTI.lvotVTI,
+          initialValue: bodyMassIndexCalculation.height,
           onTapSelectAll: true,
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelText: 'LVOT VTI (cm)',
+            labelText: 'Height (cm)',
             hintText:
-                'Velocity time integral through the left ventricle ouflow tract',
+                'Height in centimeters',
           ),
           onChanged: (val) => setState(() {
-            _avAreaVTI.lvotVTI = val;
-          }),
-        ),
-        NumberFormField(
-          initialValue: _avAreaVTI.avVTI,
-          onTapSelectAll: true,
-          decoration: const InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelText: 'Aortic Valve VTI (cm)',
-            hintText: 'Velocity time integral through the aortic valve',
-          ),
-          onChanged: (val) => setState(() {
-            _avAreaVTI.avVTI = val;
+            bodyMassIndexCalculation.height = val;
           }),
         ),
       ]),
@@ -113,48 +99,45 @@ class _AorticValveAreaByVTI extends State<AorticValveAreaByVTI> {
   }
 }
 
-class AvAreaVTI {
-  static const double _initLvotDiam = null;
-  static const double _initLvotVTI = null;
-  static const double _initAvVTI = null;
+class BodyMassIndexCalculation {
+  static const double _initWeight = null;
+  static const double _initHeight = null;
 
   static ValueRangeList valueColorList = ValueRangeList([
     const Range(
-        min: 3,
-        max: 4,
-        color: RangeColors.normal,
-        value: 'Normal Valve',
-        visible: true),
-    const Range(
-        min: 1.5,
-        max: 3,
-        color: RangeColors.mild,
-        value: 'Mild Stenosis',
-        visible: true),
-    const Range(
-        min: 1.0,
-        max: 1.5,
+        max: 18.5,
         color: RangeColors.moderate,
-        value: 'Moderate Stenosis',
+        value: 'Underweight',
         visible: true),
     const Range(
-        min: 0.1,
-        max: 1,
+        min: 18.5,
+        max: 25,
+        color: RangeColors.normal,
+        value: 'Normal Range',
+        visible: true),
+    const Range(
+        min: 25,
+        max: 30,
+        color: RangeColors.moderate,
+        value: 'Overweight',
+        visible: true),
+    const Range(
+        min: 30,
+        max: 40,
         color: RangeColors.severe,
-        value: 'Severe Stenosis',
+        value: 'Obese',
         visible: true),
     const Range(
         color: RangeColors.extreme, value: 'Wrong values', visible: false),
   ]);
 
-  double lvotDiameter = _initLvotDiam;
-  double lvotVTI = _initLvotVTI;
-  double avVTI = _initAvVTI;
+  double weight = _initWeight;
+  double height = _initHeight;
 
   double get value {
     double ret;
     try {
-      ret = (MathUtils.area(lvotDiameter) * lvotVTI) / avVTI ?? double.nan;
+      ret = weight / pow((height/100), 2) ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

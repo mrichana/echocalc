@@ -1,4 +1,5 @@
-import 'package:echocalc/widgets/aortic_valve_area.dart';
+import 'package:echocalc/widgets/calculators/aortic_valve_stenosis.dart';
+import 'package:echocalc/widgets/calculators/body_size_index.dart';
 import 'package:flutter/material.dart';
 import 'package:echocalc/models/calculator_navigation_info.dart';
 
@@ -6,7 +7,8 @@ class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key key, this.active}) : super(key: key);
 
   static List<CalculatorNavigationInfo> calculators = [
-    AorticValveArea.calculatorNavigationInfo
+    AorticValveStenosis.calculatorNavigationInfo,
+    BodySizeIndex.calculatorNavigationInfo,
   ];
 
   final String active;
@@ -37,9 +39,12 @@ class NavigationDrawer extends StatelessWidget {
         ),
     ];
     calculators.forEach((element) {
+      print('Address:${element.address}');
+      print('Active:$active');
+      var disabled  = (active != null) ? element.address.startsWith(active) : false;
       list.add(ListTile(
         title: element.name,
-        enabled: !(element.address == active),
+        enabled: !disabled,
         onTap: () {
           Navigator.pushNamedAndRemoveUntil(
               context, element.address, ModalRoute.withName('/'));
@@ -47,7 +52,7 @@ class NavigationDrawer extends StatelessWidget {
         trailing: (element.children != null)
             ? PopupMenuButton<String>(
                 icon: Icon(Icons.more_vert),
-                enabled: !(element.address == active),
+                enabled: !disabled,
                 onSelected: (selection) {
                   Navigator.pushNamedAndRemoveUntil(
                       context, selection, ModalRoute.withName('/'));

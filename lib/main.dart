@@ -12,9 +12,9 @@ void main() {
     initialRoute: MainScreen.routeName,
     routes: {
       MainScreen.routeName: (context) => MainScreen(),
-      AorticValveArea.routeName: (context) => AorticValveArea(),
-      '/ava/vmax': (context) => AorticValveArea(initVmaxOrVTI: VmaxOrVTI.Vmax),
-      '/ava/vti': (context) => AorticValveArea(initVmaxOrVTI: VmaxOrVTI.VTI),
+      '/ava': (context) => AorticValveArea(),
+      '/ava/vmax': (context) => AorticValveArea(options: { 'initVmaxOrVTI': 'vmax'}),
+      '/ava/vti': (context) => AorticValveArea(options: {'initVmaxOrVTI': 'vti'}),
     }
   ));
 }

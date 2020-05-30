@@ -1,11 +1,11 @@
-import 'Dart:math';
+import 'package:echocalc/utilities/conversions.dart';
 import 'package:flutter/cupertino.dart';
 
-class AvArea {
+class AvAreaVTI {
   static const double _initLvotDiam = null;
-  static const double _initLvotVmax = null;
-  static const double _initAvVmax = null;
-
+  static const double _initLvotVTI = null;
+  static const double _initAvVTI = null;
+ 
   static ValueRangeList valueColorList = ValueRangeList([
     const Range(
         min: 3, max: 4, color: RangeColors.normal, value: 'Normal Valve', visible: true),
@@ -20,13 +20,13 @@ class AvArea {
   ]);
 
   double lvotDiameter = _initLvotDiam;
-  double lvotVmax = _initLvotVmax;
-  double avVmax = _initAvVmax;
+  double lvotVTI = _initLvotVTI;
+  double avVTI = _initAvVTI;
 
   double get value {
     double ret;
     try {
-      ret = (Data.area(lvotDiameter) * lvotVmax) / avVmax ?? double.nan;
+      ret = (MathUtils.area(lvotDiameter) * lvotVTI) / avVTI ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }
@@ -73,13 +73,4 @@ class ValueRangeList {
     }
     return ret;
   }
-}
-
-class Data {
-  static double area(double diameter) {
-    return (diameter != null) ? pi * pow(diameter / 2, 2) : double.nan;
-  }
-
-  Data();
-  AvArea avArea = AvArea();
 }

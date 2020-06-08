@@ -57,7 +57,7 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
           onTapSelectAll: true,
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
-            labelText: 'LVOT Diameter (cm)',
+            labelText: 'LVOT Diameter (mm)',
             hintText: 'Left ventricle outflow tract diameter',
           ),
           onChanged: (val) => setState(() {
@@ -155,7 +155,7 @@ class AvAreaVmax {
   double get value {
     double ret;
     try {
-      ret = (MathUtils.area(lvotDiameter) * lvotVmax) / avVmax ?? double.nan;
+      ret = (MathUtils.area(lvotDiameter/10) * lvotVmax) / avVmax ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

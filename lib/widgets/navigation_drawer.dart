@@ -39,8 +39,6 @@ class NavigationDrawer extends StatelessWidget {
         ),
     ];
     calculators.forEach((element) {
-      print('Address:${element.address}');
-      print('Active:$active');
       var disabled  = (active != null) ? element.address.startsWith(active) : false;
       list.add(ListTile(
         title: element.name,

@@ -76,11 +76,12 @@ class NumberFormField extends FormField<String> {
         ),
         assert(maxLength == null || maxLength > 0),
         assert(enableInteractiveSelection != null),
-        assert(! (onTapSelectAll == true && onTap != null)),
+        assert(!(onTapSelectAll == true && onTap != null)),
         super(
           key: key,
-          initialValue:
-              controller != null ? controller.text : null, //initialValue?.toString(),
+          initialValue: controller != null
+              ? controller.text
+              : null, //initialValue?.toString(),
           onSaved: (str) {
             onSaved(str.parseDouble());
           },
@@ -108,10 +109,13 @@ class NumberFormField extends FormField<String> {
             }
 
             void onTapHandler() {
-              state._effectiveController.selection = TextSelection(baseOffset: 0, extentOffset: state._effectiveController.text.length);
+              state._effectiveController.selection = TextSelection(
+                  baseOffset: 0,
+                  extentOffset: state._effectiveController.text.length);
             }
 
-            (inputFormatters ??= List<TextInputFormatter>()).add(NumberInputFormatter());
+            (inputFormatters ??= List<TextInputFormatter>())
+                .add(NumberInputFormatter());
             return TextField(
               controller: state._effectiveController,
               focusNode: focusNode,
@@ -254,7 +258,7 @@ class NumberInputFormatter extends TextInputFormatter {
               TextSelection.collapsed(offset: ret.selection.baseOffset + 1));
     }
 
-    if (ret.text!='' && !RegExp(r'^\d+\.?\d*$').hasMatch(ret.text)) {
+    if (ret.text != '' && !RegExp(r'^\d+\.?\d*$').hasMatch(ret.text)) {
       ret = oldValue;
     }
 

@@ -11,13 +11,15 @@ class BodyMassIndex extends StatefulWidget {
 }
 
 class _BodyMassIndex extends State<BodyMassIndex> {
-  BodyMassIndexCalculation bodyMassIndexCalculation = BodyMassIndexCalculation();
+  BodyMassIndexCalculation bodyMassIndexCalculation =
+      BodyMassIndexCalculation();
 
   final _bodyMassIndexFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    var activeRange = BodyMassIndexCalculation.valueColorList.getValue(bodyMassIndexCalculation.value);
+    var activeRange = BodyMassIndexCalculation.valueColorList
+        .getValue(bodyMassIndexCalculation.value);
     var result = AnimatedOpacity(
       opacity: activeRange.visible ? 1.0 : 0.0,
       duration: Duration(seconds: 1),
@@ -47,7 +49,7 @@ class _BodyMassIndex extends State<BodyMassIndex> {
     );
     var form = Form(
       key: _bodyMassIndexFormKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
         NumberFormField(
           initialValue: bodyMassIndexCalculation.weight,
@@ -67,8 +69,7 @@ class _BodyMassIndex extends State<BodyMassIndex> {
           decoration: const InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.auto,
             labelText: 'Height (cm)',
-            hintText:
-                'Height in centimeters',
+            hintText: 'Height in centimeters',
           ),
           onChanged: (val) => setState(() {
             bodyMassIndexCalculation.height = val;
@@ -137,7 +138,7 @@ class BodyMassIndexCalculation {
   double get value {
     double ret;
     try {
-      ret = weight / pow((height/100), 2) ?? double.nan;
+      ret = weight / pow((height / 100), 2) ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

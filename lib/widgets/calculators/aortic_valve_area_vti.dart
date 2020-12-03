@@ -49,7 +49,7 @@ class _AorticValveAreaByVTI extends State<AorticValveAreaByVTI> {
     );
     var form = Form(
       key: _avAreaVTIFormKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
         NumberFormField(
           initialValue: _avAreaVTI.lvotDiameter,
@@ -154,7 +154,7 @@ class AvAreaVTI {
   double get value {
     double ret;
     try {
-      ret = (MathUtils.area(lvotDiameter/10) * lvotVTI) / avVTI ?? double.nan;
+      ret = (MathUtils.area(lvotDiameter / 10) * lvotVTI) / avVTI ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

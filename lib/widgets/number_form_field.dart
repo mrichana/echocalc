@@ -94,7 +94,7 @@ class NumberFormField extends FormField<String> {
                   return null;
                 }
               },
-          autovalidate: autovalidate,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           enabled: enabled ?? decoration?.enabled ?? true,
           builder: (FormFieldState<String> field) {
             final _NumberFormFieldState state = field as _NumberFormFieldState;

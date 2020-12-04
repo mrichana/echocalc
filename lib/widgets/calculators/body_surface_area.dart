@@ -52,7 +52,7 @@ class _BodySurfaceArea extends State<BodySurfaceArea> {
     );
     var form = Form(
       key: _bodySurfaceAreaFormKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
         NumberFormField(
           initialValue: bodySurfaceAreaCalculation.weight,

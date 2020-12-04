@@ -38,8 +38,7 @@ class _BodySizeIndex extends State<BodySizeIndex> {
   @override
   void initState() {
     super.initState();
-    var option =
-        (widget.options != null) ? widget.options['selection'] : 'bmi';
+    var option = (widget.options != null) ? widget.options['selection'] : 'bmi';
     _index = BodySizeIndex.calculatorIndex[option];
   }
 
@@ -67,10 +66,9 @@ class _BodySizeIndex extends State<BodySizeIndex> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('assets/Vmax.png')),
-              title: Text('BMI')),
+              icon: ImageIcon(AssetImage('assets/Vmax.png')), label: 'BMI'),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('assets/vti.png')), title: Text('BSA')),
+              icon: ImageIcon(AssetImage('assets/vti.png')), label: 'BSA'),
         ],
         currentIndex: _index,
         onTap: (int index) {

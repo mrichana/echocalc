@@ -16,7 +16,8 @@ class _AorticValveVelocityRatio extends State<AorticValveVelocityRatio> {
 
   @override
   Widget build(BuildContext context) {
-    var activeRange = AvVelocityRatio.valueColorList.getValue(avVelocityRatio.value);
+    var activeRange =
+        AvVelocityRatio.valueColorList.getValue(avVelocityRatio.value);
     var result = AnimatedOpacity(
       opacity: activeRange.visible ? 1.0 : 0.0,
       duration: Duration(seconds: 1),
@@ -49,7 +50,7 @@ class _AorticValveVelocityRatio extends State<AorticValveVelocityRatio> {
     );
     var form = Form(
       key: _avVelocityRatioFormKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
         NumberFormField(
           initialValue: avVelocityRatio.lvotVmax,
@@ -140,7 +141,7 @@ class AvVelocityRatio {
   double get value {
     double ret;
     try {
-      ret =  lvotVmax / avVmax ?? double.nan;
+      ret = lvotVmax / avVmax ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

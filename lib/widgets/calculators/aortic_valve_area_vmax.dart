@@ -50,7 +50,7 @@ class _AorticValveAreaByVmax extends State<AorticValveAreaByVmax> {
     );
     var form = Form(
       key: _avAreaVmaxFormKey,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(children: [
         NumberFormField(
           initialValue: avAreaVmax.lvotDiameter,
@@ -155,7 +155,8 @@ class AvAreaVmax {
   double get value {
     double ret;
     try {
-      ret = (MathUtils.area(lvotDiameter/10) * lvotVmax) / avVmax ?? double.nan;
+      ret =
+          (MathUtils.area(lvotDiameter / 10) * lvotVmax) / avVmax ?? double.nan;
     } catch (e) {
       ret = double.nan;
     }

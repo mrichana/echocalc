@@ -56,14 +56,18 @@ class _AorticValveStenosis extends State<AorticValveStenosis> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: AorticValveStenosis.calculatorNavigationInfo.children[_index].name
-      ),
+          title: AorticValveStenosis
+              .calculatorNavigationInfo.children[_index].name),
       drawer: Drawer(child: NavigationDrawer(active: '/av')),
       body: Container(
           padding: EdgeInsets.all(8),
           child: PageView(
             controller: _pageController,
-            children: [AorticValveAreaByVmax(), AorticValveAreaByVTI(), AorticValveVelocityRatio()],
+            children: [
+              AorticValveAreaByVmax(),
+              AorticValveAreaByVTI(),
+              AorticValveVelocityRatio()
+            ],
             onPageChanged: (index) {
               setState(() {
                 _index = index;
@@ -73,12 +77,11 @@ class _AorticValveStenosis extends State<AorticValveStenosis> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('assets/Vmax.png')),
-              title: Text('Vmax')),
+              icon: ImageIcon(AssetImage('assets/Vmax.png')), label: 'Vmax'),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('assets/vti.png')), title: Text('VTI')),
+              icon: ImageIcon(AssetImage('assets/vti.png')), label: 'VTI'),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('assets/Vmax.png')), title: Text('VR'))
+              icon: ImageIcon(AssetImage('assets/Vmax.png')), label: 'VR')
         ],
         currentIndex: _index, //_vmaxOrVTI.index,
         onTap: (int index) {

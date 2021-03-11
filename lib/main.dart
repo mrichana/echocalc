@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'widgets/main_screen.dart';
 import 'package:echocalc/widgets/calculators/aortic_valve_stenosis.dart';
 import 'package:echocalc/widgets/calculators/body_size_index.dart';
 
 void main() {
-  runApp(
-    ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final greeting = watch(greetingProvider);
-
+  Widget build(BuildContext context) {
     return MaterialApp(
-        title: greeting, //'EchoCalc',
+        title: 'EchoCalc',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -43,5 +36,3 @@ class MyApp extends ConsumerWidget {
         });
   }
 }
-
-final greetingProvider = Provider((ref) => 'Hello Riverpod!');
